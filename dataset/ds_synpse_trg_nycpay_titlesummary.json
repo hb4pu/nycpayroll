@@ -23,9 +23,9 @@
 				"precision": 15
 			},
 			{
-				"name": "AveragePay",
-				"type": "float",
-				"precision": 15
+				"name": "Headcount",
+				"type": "int",
+				"precision": 10
 			}
 		],
 		"typeProperties": {
