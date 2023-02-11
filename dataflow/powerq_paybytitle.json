@@ -13,7 +13,7 @@
 					}
 				}
 			],
-			"script": "section Section1;\r\nshared ds_asql_trg_payroll2021 = let AdfDoc = Sql.Database(\"sekousa-dataanalytics-transmogrify-sql.database.windows.net\", \"db_nycpayroll\", [CreateNavigationProperties = false]), InputTable = AdfDoc{[Schema=\"dbo\",Item=\"NYC_Payroll_Data\"]}[Data] in InputTable;\r\nshared UserQuery = let Source = #\"ds_asql_trg_payroll2021\",\r\n  #\"Added custom\" = Table.TransformColumnTypes(Table.AddColumn(Source, \"TotalPay\", each [RegularGrossPaid]+[TotalOTPaid]+[TotalOtherPay]), {{\"TotalPay\", type number}}),\r\n  #\"Grouped rows\" = Table.Group(#\"Added custom\", {\"FiscalYear\", \"TitleDescription\"}, {{\"TotalPay\", each List.Sum([TotalPay]), type nullable number}, {\"Totals\", each Table.RowCount(_), Int64.Type}}) in #\"Grouped rows\";\r\n",
+			"script": "section Section1;\r\nshared ds_asql_trg_payroll2021 = let AdfDoc = Sql.Database(\"sekousa-dataanalytics-transmogrify-sql.database.windows.net\", \"db_nycpayroll\", [CreateNavigationProperties = false]), InputTable = AdfDoc{[Schema=\"dbo\",Item=\"NYC_Payroll_Data\"]}[Data] in InputTable;\r\nshared UserQuery = let Source = #\"ds_asql_trg_payroll2021\",\r\n  #\"Added custom\" = Table.TransformColumnTypes(Table.AddColumn(Source, \"TotalPay\", each [RegularGrossPaid]+[TotalOTPaid]+[TotalOtherPay]), {{\"TotalPay\", type number}}),\r\n  #\"Grouped rows\" = Table.Group(#\"Added custom\", {\"FiscalYear\", \"TitleDescription\"}, {{\"TotalPay\", each List.Sum([TotalPay]), type nullable number}, {\"Totals\", each Table.RowCount(_), Int64.Type}}),\r\n  #\"Renamed columns\" = Table.RenameColumns(#\"Grouped rows\", {{\"TitleDescription\", \"Title\"}, {\"Totals\", \"AveragePay\"}}) in #\"Renamed columns\";\r\n",
 			"documentLocale": "en-us"
 		}
 	}
