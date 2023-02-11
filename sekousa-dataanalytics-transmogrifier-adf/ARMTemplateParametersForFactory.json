@@ -8,13 +8,13 @@
 		"ls_adls2_nycpayroll_accountKey": {
 			"value": ""
 		},
+		"ls_adls_transmogrify2_connectionString": {
+			"value": ""
+		},
 		"ls_sqldb_prototype_connectionString": {
 			"value": ""
 		},
 		"ls_synapse_prototype_connectionString": {
-			"value": ""
-		},
-		"ls_adls_transmogrify2_connectionString": {
 			"value": ""
 		},
 		"ls_adls2_nycpayroll_properties_typeProperties_url": {

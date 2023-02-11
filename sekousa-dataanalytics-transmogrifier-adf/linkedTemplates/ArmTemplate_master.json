@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'ls_adls2_nycpayroll'"
 		},
+		"ls_adls_transmogrify2_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'ls_adls_transmogrify2'"
+		},
 		"ls_sqldb_prototype_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'ls_sqldb_prototype'"
@@ -18,10 +22,6 @@
 		"ls_synapse_prototype_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'ls_synapse_prototype'"
-		},
-		"ls_adls_transmogrify2_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'ls_adls_transmogrify2'"
 		},
 		"ls_adls2_nycpayroll_properties_typeProperties_url": {
 			"type": "string",
@@ -57,14 +57,14 @@
 					"ls_adls2_nycpayroll_accountKey": {
 						"value": "[parameters('ls_adls2_nycpayroll_accountKey')]"
 					},
+					"ls_adls_transmogrify2_connectionString": {
+						"value": "[parameters('ls_adls_transmogrify2_connectionString')]"
+					},
 					"ls_sqldb_prototype_connectionString": {
 						"value": "[parameters('ls_sqldb_prototype_connectionString')]"
 					},
 					"ls_synapse_prototype_connectionString": {
 						"value": "[parameters('ls_synapse_prototype_connectionString')]"
-					},
-					"ls_adls_transmogrify2_connectionString": {
-						"value": "[parameters('ls_adls_transmogrify2_connectionString')]"
 					},
 					"ls_adls2_nycpayroll_properties_typeProperties_url": {
 						"value": "[parameters('ls_adls2_nycpayroll_properties_typeProperties_url')]"
