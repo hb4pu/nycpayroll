@@ -6,14 +6,14 @@
 			"sources": [
 				{
 					"name": "ds_asql_trg_payroll2021",
-					"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~>  ds_asql_trg_payroll2021",
+					"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> ds_asql_trg_payroll2021",
 					"dataset": {
 						"referenceName": "ds_asql_trg_payroll2021",
 						"type": "DatasetReference"
 					}
 				}
 			],
-			"script": "section Section1;\r\nshared ds_asql_trg_payroll2021 = let AdfDoc = Sql.Database(\"sekousa-dataanalytics-transmogrify-sql.database.windows.net\", \"db_nycpayroll\", [CreateNavigationProperties = false]), InputTable = AdfDoc{[Schema=\"dbo\",Item=\"NYC_Payroll_Data\"]}[Data],\r\n  #\"Changed column type\" = Table.TransformColumnTypes(InputTable, {{\"EmployeeID\", type text}}),\r\n  #\"Removed columns\" = Table.RemoveColumns(#\"Changed column type\", {\"AgencyStartDate\", \"WorkLocationBorough\"}) in #\"Removed columns\";\r\nshared UserQuery = let Source = #\"ds_asql_trg_payroll2021\",\r\n  #\"Added custom\" = Table.TransformColumnTypes(Table.AddColumn(Source, \"TotalPay\", each [RegularGrossPaid]+[TotalOTPaid]+[TotalOtherPay]), {{\"TotalPay\", type number}}),\r\n  #\"Grouped rows\" = Table.Group(#\"Added custom\", {\"FiscalYear\", \"TitleDescription\"}, {{\"TotalPay\", each List.Sum([TotalPay]), type nullable number}, {\"Totals\", each Table.RowCount(_), Int64.Type}}) in #\"Grouped rows\";\r\n",
+			"script": "section Section1;\r\nshared ds_asql_trg_payroll2021 = let AdfDoc = Sql.Database(\"sekousa-dataanalytics-transmogrify-sql.database.windows.net\", \"db_nycpayroll\", [CreateNavigationProperties = false]), InputTable = AdfDoc{[Schema=\"dbo\",Item=\"NYC_Payroll_Data\"]}[Data] in InputTable;\r\nshared UserQuery = let Source = #\"ds_asql_trg_payroll2021\",\r\n  #\"Added custom\" = Table.TransformColumnTypes(Table.AddColumn(Source, \"TotalPay\", each [RegularGrossPaid]+[TotalOTPaid]+[TotalOtherPay]), {{\"TotalPay\", type number}}),\r\n  #\"Grouped rows\" = Table.Group(#\"Added custom\", {\"FiscalYear\", \"TitleDescription\"}, {{\"TotalPay\", each List.Sum([TotalPay]), type nullable number}, {\"Totals\", each Table.RowCount(_), Int64.Type}}) in #\"Grouped rows\";\r\n",
 			"documentLocale": "en-us"
 		}
 	}
