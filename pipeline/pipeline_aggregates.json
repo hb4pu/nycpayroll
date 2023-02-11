@@ -1,0 +1,47 @@
+{
+	"name": "pipeline_aggregates",
+	"properties": {
+		"activities": [
+			{
+				"name": "df_aggregate_data",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "df_aggregate_data",
+						"type": "DataFlowReference",
+						"parameters": {
+							"prm_fiscal_year": {
+								"value": "@pipeline().globalParameters.glbparam_startyear",
+								"type": "Expression"
+							}
+						}
+					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "ls_adls2_nycpayroll",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "adlsnycpayroll-matt-h/dirstaging"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2023-02-11T00:40:23Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

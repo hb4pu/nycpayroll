@@ -1,0 +1,17 @@
+{
+	"name": "sekousa-dataanalytics-transmogrifier-adf",
+	"properties": {
+		"globalParameters": {
+			"glbparam_startyear": {
+				"type": "int",
+				"value": 2000
+			}
+		}
+	},
+	"location": "centralus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "658df63f-cb4f-468e-b7af-14fa2b6f588c",
+		"tenantId": "9180b9a6-a316-4a88-9910-39cb4079ee5f"
+	}
+}
