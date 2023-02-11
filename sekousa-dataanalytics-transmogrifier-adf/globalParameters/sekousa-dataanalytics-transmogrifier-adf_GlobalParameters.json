@@ -1,0 +1,6 @@
+{
+	"glbparam_startyear": {
+		"type": "int",
+		"value": 2000
+	}
+}
