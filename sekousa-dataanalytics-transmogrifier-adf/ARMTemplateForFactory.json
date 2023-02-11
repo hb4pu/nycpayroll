@@ -148,6 +148,77 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/pipeline_aggregates_copy1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "powerq_paybytitle",
+						"type": "ExecuteWranglingDataflow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "powerq_paybytitle",
+								"type": "DataFlowReference",
+								"datasetParameters": {
+									"ds_asql_trg_payroll2021": {},
+									"UserQuerydssynpsetrgnycpaytitlesummary": {}
+								}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "ls_adls_transmogrify2",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "adlsnycpayroll-matt-h/dirstaging"
+							},
+							"integrationRuntime": {
+								"referenceName": "ir-centralus",
+								"type": "IntegrationRuntimeReference"
+							},
+							"queries": [
+								{
+									"queryName": "UserQuery",
+									"dataflowSinks": [
+										{
+											"name": "UserQuerydssynpsetrgnycpaytitlesummary",
+											"dataset": {
+												"referenceName": "ds_synpse_trg_nycpay_titlesummary",
+												"type": "DatasetReference",
+												"parameters": {}
+											},
+											"script": "sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tFiscalYear as integer,\n\t\tTitle as string,\n\t\tTotalPay as double,\n\t\tHeadcount as integer\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\ttruncate:true,\n\tformat: 'table',\n\tstaged: true,\n\tallowCopyCommand: true,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> UserQuerydssynpsetrgnycpaytitlesummary"
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2023-02-11T00:40:23Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/powerq_paybytitle')]",
+				"[concat(variables('factoryId'), '/linkedServices/ls_adls_transmogrify2')]",
+				"[concat(variables('factoryId'), '/integrationRuntimes/ir-centralus')]",
+				"[concat(variables('factoryId'), '/datasets/ds_synpse_trg_nycpay_titlesummary')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/pipeline_initload_payroll')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1611,7 +1682,7 @@
 							}
 						}
 					],
-					"script": "section Section1;\r\nshared ds_asql_trg_payroll2021 = let AdfDoc = Sql.Database(\"sekousa-dataanalytics-transmogrify-sql.database.windows.net\", \"db_nycpayroll\", [CreateNavigationProperties = false]), InputTable = AdfDoc{[Schema=\"dbo\",Item=\"NYC_Payroll_Data\"]}[Data] in InputTable;\r\nshared UserQuery = let Source = #\"ds_asql_trg_payroll2021\",\r\n  #\"Added custom\" = Table.TransformColumnTypes(Table.AddColumn(Source, \"TotalPay\", each [RegularGrossPaid]+[TotalOTPaid]+[TotalOtherPay]), {{\"TotalPay\", type number}}),\r\n  #\"Grouped rows\" = Table.Group(#\"Added custom\", {\"FiscalYear\", \"TitleDescription\"}, {{\"TotalPay\", each List.Sum([TotalPay]), type nullable number}, {\"Totals\", each Table.RowCount(_), Int64.Type}}),\r\n  #\"Renamed columns\" = Table.RenameColumns(#\"Grouped rows\", {{\"TitleDescription\", \"Title\"}, {\"Totals\", \"AveragePay\"}}) in #\"Renamed columns\";\r\n",
+					"script": "section Section1;\r\nshared ds_asql_trg_payroll2021 = let AdfDoc = Sql.Database(\"sekousa-dataanalytics-transmogrify-sql.database.windows.net\", \"db_nycpayroll\", [CreateNavigationProperties = false]), InputTable = AdfDoc{[Schema=\"dbo\",Item=\"NYC_Payroll_Data\"]}[Data] in InputTable;\r\nshared UserQuery = let Source = #\"ds_asql_trg_payroll2021\",\r\n  #\"Added custom\" = Table.TransformColumnTypes(Table.AddColumn(Source, \"TotalPay\", each [RegularGrossPaid]+[TotalOTPaid]+[TotalOtherPay]), {{\"TotalPay\", type number}}),\r\n  #\"Grouped rows\" = Table.Group(#\"Added custom\", {\"FiscalYear\", \"TitleDescription\"}, {{\"TotalPay\", each List.Sum([TotalPay]), type nullable number}, {\"Totals\", each Table.RowCount(_), Int64.Type}}),\r\n  #\"Renamed columns\" = Table.RenameColumns(#\"Grouped rows\", {{\"TitleDescription\", \"Title\"}, {\"Totals\", \"Headcount\"}}) in #\"Renamed columns\";\r\n",
 					"documentLocale": "en-us"
 				}
 			},
